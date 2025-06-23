@@ -1,10 +1,11 @@
 import express from 'express';
-import { PrismaClient } from '@prisma/client';
+import admin from 'firebase-admin';
 import { authenticateToken } from '../middleware/auth.js';
 import Stripe from 'stripe';
 
 const router = express.Router();
-const prisma = new PrismaClient();
+
+const db = admin.firestore();
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 // Crear intento de pago
@@ -12,27 +13,34 @@ router.post('/create-payment-intent', authenticateToken, async (req, res) => {
   try {
     const { appointmentId, amount } = req.body;
 
+    if (!amount || amount <= 0) {
+      return res.status(400).json({ error: 'Invalid amount' });
+    }
+
     const paymentIntent = await stripe.paymentIntents.create({
       amount: amount * 100, // Stripe usa centavos
       currency: 'eur',
-      metadata: { appointmentId }
+      metadata: { appointmentId: appointmentId || 'no-appointment' }
     });
 
-    const payment = await prisma.payment.create({
-      data: {
-        userId: req.user.id,
-        appointmentId,
-        amount,
-        status: 'PENDING',
-        stripeId: paymentIntent.id
-      }
-    });
+    const paymentData = {
+      userId: req.user.id,
+      appointmentId: appointmentId || null,
+      amount,
+      status: 'PENDING',
+      stripeId: paymentIntent.id,
+      createdAt: admin.firestore.FieldValue.serverTimestamp(),
+      updatedAt: admin.firestore.FieldValue.serverTimestamp()
+    };
+
+    const paymentRef = await db.collection('payments').add(paymentData);
 
     res.json({
       clientSecret: paymentIntent.client_secret,
-      paymentId: payment.id
+      paymentId: paymentRef.id
     });
   } catch (error) {
+    console.error('Error creating payment intent:', error);
     res.status(400).json({ error: error.message });
   }
 });
@@ -42,20 +50,52 @@ router.post('/confirm-payment', authenticateToken, async (req, res) => {
   try {
     const { paymentId } = req.body;
 
-    const payment = await prisma.payment.update({
-      where: { id: paymentId },
-      data: { status: 'COMPLETED' }
-    });
-
-    if (payment.appointmentId) {
-      await prisma.appointment.update({
-        where: { id: payment.appointmentId },
-        data: { status: 'CONFIRMED' }
-      });
+    if (!paymentId) {
+      return res.status(400).json({ error: 'Payment ID is required' });
     }
 
-    res.json(payment);
+    // Verificar que el pago existe
+    const paymentDoc = await db.collection('payments').doc(paymentId).get();
+    
+    if (!paymentDoc.exists) {
+      return res.status(404).json({ error: 'Payment not found' });
+    }
+
+    const paymentData = paymentDoc.data();
+
+    // Verificar que el pago pertenece al usuario
+    if (paymentData.userId !== req.user.id) {
+      return res.status(403).json({ error: 'Access denied' });
+    }
+
+    // Actualizar el estado del pago
+    await paymentDoc.ref.update({
+      status: 'COMPLETED',
+      updatedAt: admin.firestore.FieldValue.serverTimestamp()
+    });
+
+    // Si hay una cita asociada, actualizar su estado
+    if (paymentData.appointmentId) {
+      const appointmentDoc = await db.collection('appointments').doc(paymentData.appointmentId).get();
+      
+      if (appointmentDoc.exists) {
+        await appointmentDoc.ref.update({
+          status: 'CONFIRMED',
+          updatedAt: admin.firestore.FieldValue.serverTimestamp()
+        });
+      }
+    }
+
+    // Obtener los datos actualizados del pago
+    const updatedPaymentDoc = await paymentDoc.ref.get();
+    const updatedPaymentData = updatedPaymentDoc.data();
+
+    res.json({
+      id: paymentId,
+      ...updatedPaymentData
+    });
   } catch (error) {
+    console.error('Error confirming payment:', error);
     res.status(400).json({ error: error.message });
   }
 });
@@ -63,24 +103,50 @@ router.post('/confirm-payment', authenticateToken, async (req, res) => {
 // Obtener historial de pagos
 router.get('/history', authenticateToken, async (req, res) => {
   try {
-    const payments = await prisma.payment.findMany({
-      where: {
-        userId: req.user.id
-      },
-      include: {
-        appointment: {
-          include: {
-            professional: true
+    const paymentsSnapshot = await db.collection('payments')
+      .where('userId', '==', req.user.id)
+      .orderBy('createdAt', 'desc')
+      .get();
+
+    const payments = [];
+
+    for (const doc of paymentsSnapshot.docs) {
+      const paymentData = doc.data();
+      
+      let appointmentData = null;
+      let professionalData = null;
+
+      // Si hay cita asociada, obtener sus datos
+      if (paymentData.appointmentId) {
+        const appointmentDoc = await db.collection('appointments').doc(paymentData.appointmentId).get();
+        
+        if (appointmentDoc.exists) {
+          appointmentData = appointmentDoc.data();
+          
+          // Si hay profesional asociado, obtener sus datos
+          if (appointmentData.professionalId) {
+            const professionalDoc = await db.collection('professionals').doc(appointmentData.professionalId).get();
+            
+            if (professionalDoc.exists) {
+              professionalData = professionalDoc.data();
+            }
           }
         }
-      },
-      orderBy: {
-        createdAt: 'desc'
       }
-    });
+
+      payments.push({
+        id: doc.id,
+        ...paymentData,
+        appointment: appointmentData ? {
+          ...appointmentData,
+          professional: professionalData
+        } : null
+      });
+    }
 
     res.json(payments);
   } catch (error) {
+    console.error('Error fetching payment history:', error);
     res.status(400).json({ error: error.message });
   }
 });

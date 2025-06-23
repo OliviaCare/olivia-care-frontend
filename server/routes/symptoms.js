@@ -1,10 +1,11 @@
 import express from 'express';
-import { PrismaClient } from '@prisma/client';
+import admin from 'firebase-admin';
 import { authenticateToken } from '../middleware/auth.js';
 import { z } from 'zod';
 
 const router = express.Router();
-const prisma = new PrismaClient();
+
+const db = admin.firestore();
 
 // Schema de validación
 const symptomLogSchema = z.object({
@@ -18,17 +19,23 @@ router.post('/', authenticateToken, async (req, res) => {
   try {
     const data = symptomLogSchema.parse(req.body);
     
-    const symptomLog = await prisma.symptomLog.create({
-      data: {
-        userId: req.user.id,
-        date: new Date(data.date),
-        symptoms: data.symptoms,
-        notes: data.notes
-      }
-    });
+    const symptomLogData = {
+      userId: req.user.id,
+      date: new Date(data.date),
+      symptoms: data.symptoms,
+      notes: data.notes || null,
+      createdAt: admin.firestore.FieldValue.serverTimestamp(),
+      updatedAt: admin.firestore.FieldValue.serverTimestamp()
+    };
 
-    res.json(symptomLog);
+    const symptomLogRef = await db.collection('symptoms').add(symptomLogData);
+
+    res.json({
+      id: symptomLogRef.id,
+      ...symptomLogData
+    });
   } catch (error) {
+    console.error('Error creating symptom log:', error);
     res.status(400).json({ error: error.message });
   }
 });
@@ -38,21 +45,86 @@ router.get('/history', authenticateToken, async (req, res) => {
   try {
     const { startDate, endDate } = req.query;
     
-    const symptoms = await prisma.symptomLog.findMany({
-      where: {
-        userId: req.user.id,
-        date: {
-          gte: startDate ? new Date(startDate) : undefined,
-          lte: endDate ? new Date(endDate) : undefined
-        }
-      },
-      orderBy: {
-        date: 'desc'
-      }
+    let query = db.collection('symptoms')
+      .where('userId', '==', req.user.id);
+
+    // Aplicar filtros de fecha si se proporcionan
+    if (startDate) {
+      query = query.where('date', '>=', new Date(startDate));
+    }
+    
+    if (endDate) {
+      query = query.where('date', '<=', new Date(endDate));
+    }
+
+    // Ordenar por fecha descendente
+    query = query.orderBy('date', 'desc');
+
+    const symptomsSnapshot = await query.get();
+    
+    const symptoms = [];
+    symptomsSnapshot.forEach(doc => {
+      const data = doc.data();
+      symptoms.push({
+        id: doc.id,
+        ...data,
+        // Convertir timestamp de Firestore a formato Date si es necesario
+        date: data.date.toDate ? data.date.toDate() : data.date
+      });
     });
 
     res.json(symptoms);
   } catch (error) {
+    console.error('Error fetching symptom history:', error);
+    res.status(400).json({ error: error.message });
+  }
+});
+
+// Obtener estadísticas de síntomas
+router.get('/stats', authenticateToken, async (req, res) => {
+  try {
+    const symptomsSnapshot = await db.collection('symptoms')
+      .where('userId', '==', req.user.id)
+      .get();
+
+    const symptomStats = {};
+    let totalLogs = 0;
+
+    symptomsSnapshot.forEach(doc => {
+      const data = doc.data();
+      totalLogs++;
+      
+      if (data.symptoms && typeof data.symptoms === 'object') {
+        Object.entries(data.symptoms).forEach(([symptom, intensity]) => {
+          if (!symptomStats[symptom]) {
+            symptomStats[symptom] = {
+              count: 0,
+              totalIntensity: 0,
+              maxIntensity: 0,
+              minIntensity: 10
+            };
+          }
+          
+          symptomStats[symptom].count++;
+          symptomStats[symptom].totalIntensity += intensity;
+          symptomStats[symptom].maxIntensity = Math.max(symptomStats[symptom].maxIntensity, intensity);
+          symptomStats[symptom].minIntensity = Math.min(symptomStats[symptom].minIntensity, intensity);
+        });
+      }
+    });
+
+    // Calcular promedios
+    Object.keys(symptomStats).forEach(symptom => {
+      symptomStats[symptom].averageIntensity = 
+        symptomStats[symptom].totalIntensity / symptomStats[symptom].count;
+    });
+
+    res.json({
+      totalLogs,
+      symptomStats
+    });
+  } catch (error) {
+    console.error('Error fetching symptom stats:', error);
     res.status(400).json({ error: error.message });
   }
 });

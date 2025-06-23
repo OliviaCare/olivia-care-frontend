@@ -15,10 +15,14 @@ service cloud.firestore {
       return isAuthenticated() && request.auth.uid == userId;
     }
 
+    function isAdmin() {
+      return isAuthenticated() && request.auth.token.admin == true;
+    }
+
     // User collection rules
     match /users/{userId} {
       allow create: if isAuthenticated() && request.auth.uid == userId;
-      allow read: if isAuthenticated() && (request.auth.uid == userId || request.auth.token.admin == true);
+      allow read: if isAuthenticated() && (request.auth.uid == userId || isAdmin());
       allow update: if isAuthenticated() && request.auth.uid == userId;
       allow delete: if false;
     }
@@ -64,6 +68,17 @@ service cloud.firestore {
         )
       );
       allow delete: if isAuthenticated() && request.auth.uid == resource.data.userId;
+    }
+
+    // Wellhub temporary users - Solo para uso interno del servidor
+    match /wellhubTempUsers/{tempId} {
+      allow read, write: if false; // Solo acceso desde server-side
+    }
+
+    // Wellhub events - Solo para auditoría y admin
+    match /wellhubEvents/{eventId} {
+      allow read: if isAdmin();
+      allow write: if false; // Solo el servidor puede escribir
     }
   }
 }
