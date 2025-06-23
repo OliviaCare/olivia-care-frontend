@@ -2,10 +2,9 @@ import express from 'express';
 import admin from 'firebase-admin';
 import { authenticateToken } from '../middleware/auth.js';
 import { z } from 'zod';
+import { db } from '../config/firebase.js';
 
-const router = express.Router();
-
-const db = admin.firestore();
+const router = express.Router() as express.Router;
 
 // Schema de validación
 const symptomLogSchema = z.object({
@@ -15,7 +14,7 @@ const symptomLogSchema = z.object({
 });
 
 // Registrar síntomas
-router.post('/', authenticateToken, async (req, res) => {
+router.post('/', authenticateToken, async (req: any, res) => {
   try {
     const data = symptomLogSchema.parse(req.body);
     
@@ -36,12 +35,12 @@ router.post('/', authenticateToken, async (req, res) => {
     });
   } catch (error) {
     console.error('Error creating symptom log:', error);
-    res.status(400).json({ error: error.message });
+    res.status(400).json({ error: error instanceof Error ? error.message : 'Unknown error' });
   }
 });
 
 // Obtener historial de síntomas
-router.get('/history', authenticateToken, async (req, res) => {
+router.get('/history', authenticateToken, async (req: any, res) => {
   try {
     const { startDate, endDate } = req.query;
     
@@ -50,11 +49,11 @@ router.get('/history', authenticateToken, async (req, res) => {
 
     // Aplicar filtros de fecha si se proporcionan
     if (startDate) {
-      query = query.where('date', '>=', new Date(startDate));
+      query = query.where('date', '>=', new Date(startDate as string));
     }
     
     if (endDate) {
-      query = query.where('date', '<=', new Date(endDate));
+      query = query.where('date', '<=', new Date(endDate as string));
     }
 
     // Ordenar por fecha descendente
@@ -62,7 +61,7 @@ router.get('/history', authenticateToken, async (req, res) => {
 
     const symptomsSnapshot = await query.get();
     
-    const symptoms = [];
+    const symptoms: any[] = [];
     symptomsSnapshot.forEach(doc => {
       const data = doc.data();
       symptoms.push({
@@ -76,18 +75,18 @@ router.get('/history', authenticateToken, async (req, res) => {
     res.json(symptoms);
   } catch (error) {
     console.error('Error fetching symptom history:', error);
-    res.status(400).json({ error: error.message });
+    res.status(400).json({ error: error instanceof Error ? error.message : 'Unknown error' });
   }
 });
 
 // Obtener estadísticas de síntomas
-router.get('/stats', authenticateToken, async (req, res) => {
+router.get('/stats', authenticateToken, async (req: any, res) => {
   try {
     const symptomsSnapshot = await db.collection('symptoms')
       .where('userId', '==', req.user.id)
       .get();
 
-    const symptomStats = {};
+    const symptomStats: Record<string, any> = {};
     let totalLogs = 0;
 
     symptomsSnapshot.forEach(doc => {
@@ -106,9 +105,9 @@ router.get('/stats', authenticateToken, async (req, res) => {
           }
           
           symptomStats[symptom].count++;
-          symptomStats[symptom].totalIntensity += intensity;
-          symptomStats[symptom].maxIntensity = Math.max(symptomStats[symptom].maxIntensity, intensity);
-          symptomStats[symptom].minIntensity = Math.min(symptomStats[symptom].minIntensity, intensity);
+          symptomStats[symptom].totalIntensity += intensity as number;
+          symptomStats[symptom].maxIntensity = Math.max(symptomStats[symptom].maxIntensity, intensity as number);
+          symptomStats[symptom].minIntensity = Math.min(symptomStats[symptom].minIntensity, intensity as number);
         });
       }
     });
@@ -125,8 +124,8 @@ router.get('/stats', authenticateToken, async (req, res) => {
     });
   } catch (error) {
     console.error('Error fetching symptom stats:', error);
-    res.status(400).json({ error: error.message });
+    res.status(400).json({ error: error instanceof Error ? error.message : 'Unknown error' });
   }
 });
 
-export default router;
+export default router; 

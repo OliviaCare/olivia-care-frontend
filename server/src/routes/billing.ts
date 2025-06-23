@@ -2,14 +2,17 @@ import express from 'express';
 import admin from 'firebase-admin';
 import { authenticateToken } from '../middleware/auth.js';
 import Stripe from 'stripe';
+import { db } from '../config/firebase.js';
+import dotenv from 'dotenv';
 
-const router = express.Router();
+dotenv.config();
 
-const db = admin.firestore();
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+const router = express.Router() as express.Router;
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
 // Crear intento de pago
-router.post('/create-payment-intent', authenticateToken, async (req, res) => {
+router.post('/create-payment-intent', authenticateToken, async (req: any, res: any) => {
   try {
     const { appointmentId, amount } = req.body;
 
@@ -41,12 +44,12 @@ router.post('/create-payment-intent', authenticateToken, async (req, res) => {
     });
   } catch (error) {
     console.error('Error creating payment intent:', error);
-    res.status(400).json({ error: error.message });
+    res.status(400).json({ error: error instanceof Error ? error.message : 'Unknown error' });
   }
 });
 
 // Confirmar pago
-router.post('/confirm-payment', authenticateToken, async (req, res) => {
+router.post('/confirm-payment', authenticateToken, async (req: any, res: any) => {
   try {
     const { paymentId } = req.body;
 
@@ -64,7 +67,7 @@ router.post('/confirm-payment', authenticateToken, async (req, res) => {
     const paymentData = paymentDoc.data();
 
     // Verificar que el pago pertenece al usuario
-    if (paymentData.userId !== req.user.id) {
+    if (paymentData?.userId !== req.user.id) {
       return res.status(403).json({ error: 'Access denied' });
     }
 
@@ -75,7 +78,7 @@ router.post('/confirm-payment', authenticateToken, async (req, res) => {
     });
 
     // Si hay una cita asociada, actualizar su estado
-    if (paymentData.appointmentId) {
+    if (paymentData?.appointmentId) {
       const appointmentDoc = await db.collection('appointments').doc(paymentData.appointmentId).get();
       
       if (appointmentDoc.exists) {
@@ -96,12 +99,12 @@ router.post('/confirm-payment', authenticateToken, async (req, res) => {
     });
   } catch (error) {
     console.error('Error confirming payment:', error);
-    res.status(400).json({ error: error.message });
+    res.status(400).json({ error: error instanceof Error ? error.message : 'Unknown error' });
   }
 });
 
 // Obtener historial de pagos
-router.get('/history', authenticateToken, async (req, res) => {
+router.get('/history', authenticateToken, async (req: any, res: any) => {
   try {
     const paymentsSnapshot = await db.collection('payments')
       .where('userId', '==', req.user.id)
@@ -124,7 +127,7 @@ router.get('/history', authenticateToken, async (req, res) => {
           appointmentData = appointmentDoc.data();
           
           // Si hay profesional asociado, obtener sus datos
-          if (appointmentData.professionalId) {
+          if (appointmentData?.professionalId) {
             const professionalDoc = await db.collection('professionals').doc(appointmentData.professionalId).get();
             
             if (professionalDoc.exists) {
@@ -147,8 +150,8 @@ router.get('/history', authenticateToken, async (req, res) => {
     res.json(payments);
   } catch (error) {
     console.error('Error fetching payment history:', error);
-    res.status(400).json({ error: error.message });
+    res.status(400).json({ error: error instanceof Error ? error.message : 'Unknown error' });
   }
 });
 
-export default router;
+export default router; 

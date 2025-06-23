@@ -1,14 +1,11 @@
 import express from 'express';
-import admin from 'firebase-admin';
 import { authenticateToken, isAdmin } from '../middleware/auth.js';
+import { db } from '../config/firebase.js';
 
-const router = express.Router();
-
-
-const db = admin.firestore();
+const router = express.Router() as express.Router;
 
 // Métricas generales (solo admin)
-router.get('/metrics', authenticateToken, isAdmin, async (req, res) => {
+router.get('/metrics', authenticateToken, isAdmin, async (req: any, res) => {
   try {
     // Obtener conteos de las diferentes colecciones
     const [
@@ -39,7 +36,7 @@ router.get('/metrics', authenticateToken, isAdmin, async (req, res) => {
       .where('dateTime', '>=', lastMonth)
       .get();
 
-    const activeUserIds = new Set();
+    const activeUserIds = new Set<string>();
     activeAppointmentsSnapshot.forEach(doc => {
       const appointment = doc.data();
       activeUserIds.add(appointment.userId);
@@ -53,12 +50,12 @@ router.get('/metrics', authenticateToken, isAdmin, async (req, res) => {
     });
   } catch (error) {
     console.error('Error fetching metrics:', error);
-    res.status(400).json({ error: error.message });
+    res.status(400).json({ error: error instanceof Error ? error.message : 'Unknown error' });
   }
 });
 
 // Análisis de síntomas (para profesionales)
-router.get('/symptoms-analysis', authenticateToken, async (req, res) => {
+router.get('/symptoms-analysis', authenticateToken, async (req: any, res: any) => {
   try {
     const { userId } = req.query;
 
@@ -71,13 +68,13 @@ router.get('/symptoms-analysis', authenticateToken, async (req, res) => {
       .orderBy('date', 'asc')
       .get();
 
-    const symptoms = [];
+    const symptoms: any[] = [];
     symptomsSnapshot.forEach(doc => {
       symptoms.push({ id: doc.id, ...doc.data() });
     });
 
     // Análisis de tendencias
-    const trends = symptoms.reduce((acc, log) => {
+    const trends = symptoms.reduce((acc: Record<string, any[]>, log) => {
       if (log.symptoms && typeof log.symptoms === 'object') {
         Object.entries(log.symptoms).forEach(([symptom, intensity]) => {
           if (!acc[symptom]) {
@@ -95,16 +92,16 @@ router.get('/symptoms-analysis', authenticateToken, async (req, res) => {
     res.json({ trends });
   } catch (error) {
     console.error('Error fetching symptoms analysis:', error);
-    res.status(400).json({ error: error.message });
+    res.status(400).json({ error: error instanceof Error ? error.message : 'Unknown error' });
   }
 });
 
 // Estadísticas de citas
-router.get('/appointment-stats', authenticateToken, isAdmin, async (req, res) => {
+router.get('/appointment-stats', authenticateToken, isAdmin, async (req: any, res) => {
   try {
     const appointmentsSnapshot = await db.collection('appointments').get();
     
-    const stats = {};
+    const stats: Record<string, number> = {};
     appointmentsSnapshot.forEach(doc => {
       const appointment = doc.data();
       const status = appointment.status || 'UNKNOWN';
@@ -124,8 +121,8 @@ router.get('/appointment-stats', authenticateToken, isAdmin, async (req, res) =>
     res.json(formattedStats);
   } catch (error) {
     console.error('Error fetching appointment stats:', error);
-    res.status(400).json({ error: error.message });
+    res.status(400).json({ error: error instanceof Error ? error.message : 'Unknown error' });
   }
 });
 
-export default router;
+export default router; 

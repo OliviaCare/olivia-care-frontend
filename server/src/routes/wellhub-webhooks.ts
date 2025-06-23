@@ -1,15 +1,17 @@
 import express from 'express';
 import crypto from 'crypto';
 import admin from 'firebase-admin';
+import { db } from '../config/firebase.js';
+import dotenv from 'dotenv';
 
-const router = express.Router();
+dotenv.config();
 
-const db = admin.firestore();
+const router = express.Router() as express.Router;
 
 /**
  * Verificar la autenticidad del webhook usando el secret
  */
-function verifyWebhookSignature(payload, signature, secret) {
+function verifyWebhookSignature(payload: Buffer, signature: string, secret: string): boolean {
   const computedSignature = crypto
     .createHmac('sha256', secret)
     .update(payload)
@@ -25,13 +27,13 @@ function verifyWebhookSignature(payload, signature, secret) {
  * POST /api/webhooks/wellhub/cancel
  * Webhook para cancelaciones de usuarios
  */
-router.post('/cancel', express.raw({ type: 'application/json' }), async (req, res) => {
+router.post('/cancel', express.raw({ type: 'application/json' }), async (req: any, res: any) => {
   try {
-    const signature = req.headers['x-webhook-signature'] || req.headers['x-signature'];
-    const payload = req.body;
+    const signature = (req.headers['x-webhook-signature'] || req.headers['x-signature']) as string;
+    const payload = req.body as Buffer;
     
     // Verificar la signatura del webhook
-    if (!verifyWebhookSignature(payload, signature, process.env.WELLHUB_CANCEL_WEBHOOK_SECRET)) {
+    if (!verifyWebhookSignature(payload, signature, process.env.WELLHUB_CANCEL_WEBHOOK_SECRET!)) {
       return res.status(401).json({ error: 'Invalid webhook signature' });
     }
 
@@ -85,13 +87,13 @@ router.post('/cancel', express.raw({ type: 'application/json' }), async (req, re
  * POST /api/webhooks/wellhub/change
  * Webhook para cambios de plan de usuarios
  */
-router.post('/change', express.raw({ type: 'application/json' }), async (req, res) => {
+router.post('/change', express.raw({ type: 'application/json' }), async (req: any, res: any) => {
   try {
-    const signature = req.headers['x-webhook-signature'] || req.headers['x-signature'];
-    const payload = req.body;
+    const signature = (req.headers['x-webhook-signature'] || req.headers['x-signature']) as string;
+    const payload = req.body as Buffer;
     
     // Verificar la signatura del webhook
-    if (!verifyWebhookSignature(payload, signature, process.env.WELLHUB_CHANGE_WEBHOOK_SECRET)) {
+    if (!verifyWebhookSignature(payload, signature, process.env.WELLHUB_CHANGE_WEBHOOK_SECRET!)) {
       return res.status(401).json({ error: 'Invalid webhook signature' });
     }
 

@@ -1,11 +1,10 @@
-import express from 'express';
+import express, { Request, Response, Router } from 'express';
 import admin from 'firebase-admin';
 import { authenticateToken } from '../middleware/auth.js';
 import { z } from 'zod';
+import { db } from '../config/firebase.js';
 
-const router = express.Router();
-
-const db = admin.firestore();
+const router: Router = express.Router();
 
 // Schema de validación
 const appointmentSchema = z.object({
@@ -15,13 +14,13 @@ const appointmentSchema = z.object({
 });
 
 // Crear cita
-router.post('/', authenticateToken, async (req, res) => {
+router.post('/', authenticateToken, async (req: Request, res: Response): Promise<void> => {
   try {
     const data = appointmentSchema.parse(req.body);
     
     // Crear la cita en Firestore
     const appointmentData = {
-      userId: req.user.id,
+      userId: req.user!.id,
       professionalId: data.professionalId,
       dateTime: new Date(data.dateTime),
       status: 'PENDING',
@@ -45,15 +44,15 @@ router.post('/', authenticateToken, async (req, res) => {
     res.json(appointment);
   } catch (error) {
     console.error('Error creating appointment:', error);
-    res.status(400).json({ error: error.message });
+    res.status(400).json({ error: error instanceof Error ? error.message : 'Unknown error' });
   }
 });
 
 // Obtener citas del usuario
-router.get('/my-appointments', authenticateToken, async (req, res) => {
+router.get('/my-appointments', authenticateToken, async (req: Request, res: Response): Promise<void> => {
   try {
     const appointmentsSnapshot = await db.collection('appointments')
-      .where('userId', '==', req.user.id)
+      .where('userId', '==', req.user!.id)
       .orderBy('dateTime', 'desc')
       .get();
 
@@ -79,32 +78,35 @@ router.get('/my-appointments', authenticateToken, async (req, res) => {
     res.json(appointments);
   } catch (error) {
     console.error('Error fetching appointments:', error);
-    res.status(400).json({ error: error.message });
+    res.status(400).json({ error: error instanceof Error ? error.message : 'Unknown error' });
   }
 });
 
 // Actualizar estado de cita
-router.patch('/:id/status', authenticateToken, async (req, res) => {
+router.patch('/:id/status', authenticateToken, async (req: Request, res: Response): Promise<void> => {
   try {
     const { status } = req.body;
     const appointmentId = req.params.id;
 
     if (!status) {
-      return res.status(400).json({ error: 'Status is required' });
+      res.status(400).json({ error: 'Status is required' });
+      return;
     }
 
     // Verificar que la cita existe y pertenece al usuario
     const appointmentDoc = await db.collection('appointments').doc(appointmentId).get();
     
     if (!appointmentDoc.exists) {
-      return res.status(404).json({ error: 'Appointment not found' });
+      res.status(404).json({ error: 'Appointment not found' });
+      return;
     }
 
     const appointmentData = appointmentDoc.data();
     
     // Verificar que el usuario es el dueño de la cita o es admin
-    if (appointmentData.userId !== req.user.id && !req.user.isAdmin) {
-      return res.status(403).json({ error: 'Access denied' });
+    if (appointmentData?.userId !== req.user!.id && !req.user!.isAdmin) {
+      res.status(403).json({ error: 'Access denied' });
+      return;
     }
 
     // Actualizar el estado
@@ -123,8 +125,8 @@ router.patch('/:id/status', authenticateToken, async (req, res) => {
     });
   } catch (error) {
     console.error('Error updating appointment status:', error);
-    res.status(400).json({ error: error.message });
+    res.status(400).json({ error: error instanceof Error ? error.message : 'Unknown error' });
   }
 });
 
-export default router;
+export default router; 
