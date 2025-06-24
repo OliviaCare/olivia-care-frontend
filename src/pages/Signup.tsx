@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { Mail, Lock, User, UserPlus, AlertTriangle } from 'lucide-react';
+import { Mail, Lock, User, UserPlus, AlertTriangle, Loader2 } from 'lucide-react';
 import { createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
 import { auth } from '../lib/firebase';
 import { createOrUpdateUser } from '../services/userService';
+import { getWellhubTempUser, deleteWellhubTempUser } from '../services/wellhubService';
+import { WellhubTempUser } from '../types/user';
 
 const Signup: React.FC = () => {
   const navigate = useNavigate();
@@ -17,6 +19,41 @@ const Signup: React.FC = () => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [verificationSent, setVerificationSent] = useState(false);
+  const [wellhubTempUser, setWellhubTempUser] = useState<WellhubTempUser | null>(null);
+  const [loadingWellhubData, setLoadingWellhubData] = useState(false);
+  useEffect(() => {
+    const loadWellhubData = async () => {
+      const urlParams = new URLSearchParams(location.search);
+      const source = urlParams.get('source');
+      const tempId = urlParams.get('temp_id');
+
+      if (source === 'wellhub' && tempId) {
+        setLoadingWellhubData(true);
+        try {
+          const tempUser = await getWellhubTempUser(tempId);
+          console.log('tempUser', tempUser);
+          if (tempUser) {
+            setWellhubTempUser(tempUser);
+            // Auto-fill form with Wellhub data
+            setFormData(prev => ({
+              ...prev,
+              name: `${tempUser.firstName || ''} ${tempUser.lastName || ''}`.trim() || prev.name,
+              email: tempUser.email || prev.email
+            }));
+          } else {
+            setError('El enlace de registro de Wellhub ha expirado o no es válido. Por favor, intenta registrarte nuevamente desde Wellhub.');
+          }
+        } catch (err) {
+          console.error('Error loading Wellhub temp data:', err);
+          setError('Error al cargar los datos de Wellhub. Por favor, intenta nuevamente.');
+        } finally {
+          setLoadingWellhubData(false);
+        }
+      }
+    };
+
+    loadWellhubData();
+  }, [location.search]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData(prev => ({
@@ -55,15 +92,39 @@ const Signup: React.FC = () => {
         formData.password
       );
 
-      // Create user document in Firestore
-      await createOrUpdateUser(userCredential.user.uid, {
+      // Prepare user data
+      const userData: any = {
         name: formData.name,
         email: formData.email,
         createdAt: new Date(),
         emailVerified: false
-      });
+      };
 
-      // Send verification email without custom action URL
+      // Add Wellhub metadata if coming from Wellhub
+      if (wellhubTempUser) {
+        userData.wellhub = {
+          wellhubUserId: wellhubTempUser.wellhubUserId,
+          origin: wellhubTempUser.origin,
+          userStatus: wellhubTempUser.userStatus,
+          countryCode: wellhubTempUser.countryCode,
+          registeredAt: new Date()
+        };
+      }
+
+      // Create user document in Firestore
+      await createOrUpdateUser(userCredential.user.uid, userData);
+
+      // Delete temporary Wellhub data after successful registration
+      if (wellhubTempUser) {
+        try {
+          await deleteWellhubTempUser(wellhubTempUser.tempId);
+        } catch (cleanupError) {
+          console.error('Error cleaning up temp user data:', cleanupError);
+          // Don't fail the registration for cleanup errors
+        }
+      }
+
+      // Send verification email
       await sendEmailVerification(userCredential.user);
       setVerificationSent(true);
 
@@ -108,6 +169,19 @@ const Signup: React.FC = () => {
     }
   };
 
+  // Loading state for Wellhub data
+  if (loadingWellhubData) {
+    return (
+      <div className="min-h-[80vh] flex items-center justify-center">
+        <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md text-center">
+          <Loader2 className="mx-auto text-purple-600 mb-4 animate-spin" size={48} />
+          <h2 className="text-2xl font-bold text-purple-800 mb-4">Cargando datos de Wellhub</h2>
+          <p className="text-gray-600">Por favor, espera mientras cargamos tu información...</p>
+        </div>
+      </div>
+    );
+  }
+
   if (verificationSent) {
     return (
       <div className="min-h-[80vh] flex items-center justify-center">
@@ -146,7 +220,17 @@ const Signup: React.FC = () => {
   return (
     <div className="min-h-[80vh] flex items-center justify-center">
       <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
-        <h2 className="text-2xl font-bold text-purple-800 mb-6 text-center">Crear Cuenta</h2>
+        <h2 className="text-2xl font-bold text-purple-800 mb-6 text-center">
+          {wellhubTempUser ? 'Completar Registro - Wellhub' : 'Crear Cuenta'}
+        </h2>
+        
+        {wellhubTempUser && (
+          <div className="bg-blue-50 p-4 rounded-lg mb-6">
+            <p className="text-sm text-blue-800">
+              ¡Bienvenido desde Wellhub! Completa tu registro para acceder a Olivia Care.
+            </p>
+          </div>
+        )}
         
         {error && (
           <div className="bg-red-50 text-red-600 p-4 rounded-lg mb-6">
@@ -167,6 +251,7 @@ const Signup: React.FC = () => {
               onChange={handleInputChange}
               className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-purple-600"
               required
+              placeholder={wellhubTempUser ? "Tu nombre desde Wellhub" : "Tu nombre completo"}
             />
           </div>
 
@@ -182,7 +267,14 @@ const Signup: React.FC = () => {
               onChange={handleInputChange}
               className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-purple-600"
               required
+              placeholder={wellhubTempUser ? "Tu email desde Wellhub" : "tu@email.com"}
+              disabled={!!wellhubTempUser?.email} // Disable if email comes from Wellhub
             />
+            {wellhubTempUser?.email && (
+              <p className="text-xs text-gray-500 mt-1">
+                Email proporcionado por Wellhub
+              </p>
+            )}
           </div>
 
           <div>
@@ -198,6 +290,7 @@ const Signup: React.FC = () => {
               className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-purple-600"
               required
               minLength={6}
+              placeholder="Mínimo 6 caracteres"
             />
           </div>
 
@@ -214,6 +307,7 @@ const Signup: React.FC = () => {
               className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-purple-600"
               required
               minLength={6}
+              placeholder="Confirma tu contraseña"
             />
           </div>
 
@@ -223,11 +317,11 @@ const Signup: React.FC = () => {
             className="w-full bg-purple-600 text-white p-3 rounded-lg hover:bg-purple-700 transition duration-300 flex items-center justify-center"
           >
             {loading ? (
-              <span className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></span>
+              <Loader2 className="animate-spin rounded-full h-5 w-5" />
             ) : (
               <>
                 <UserPlus size={18} className="mr-2" />
-                Registrarse
+                {wellhubTempUser ? 'Completar Registro' : 'Registrarse'}
               </>
             )}
           </button>

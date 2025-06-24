@@ -70,9 +70,10 @@ service cloud.firestore {
       allow delete: if isAuthenticated() && request.auth.uid == resource.data.userId;
     }
 
-    // Wellhub temporary users - Solo para uso interno del servidor
+    // Wellhub temporary users - Allow read for signup flow, write only server-side
     match /wellhubTempUsers/{tempId} {
-      allow read, write: if false; // Solo acceso desde server-side
+      allow read: if true; // Allow public read for signup flow
+      allow write: if false; // Solo acceso desde server-side
     }
 
     // Wellhub events - Solo para auditoría y admin

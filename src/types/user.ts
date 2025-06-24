@@ -4,9 +4,11 @@ export interface User {
   name: string;
   dateOfBirth: string;
   createdAt: Date;
+  emailVerified?: boolean;
   profile?: UserProfile;
   assessmentResults?: AssessmentResults;
   subscription?: SubscriptionInfo;
+  wellhub?: WellhubMetadata;
 }
 
 export interface UserProfile {
@@ -40,4 +42,25 @@ export interface SubscriptionInfo {
   };
   helpText?: string;
   price?: number;
+}
+
+export interface WellhubMetadata {
+  wellhubUserId: string;
+  origin?: string;
+  userStatus?: string;
+  countryCode?: string;
+  registeredAt: Date;
+}
+
+export interface WellhubTempUser {
+  tempId: string;
+  wellhubUserId: string;
+  email?: string;
+  firstName?: string;
+  lastName?: string;
+  origin?: string;
+  userStatus?: string;
+  countryCode?: string;
+  createdAt: Date;
+  expiresAt: Date;
 }
