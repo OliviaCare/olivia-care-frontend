@@ -234,7 +234,7 @@ const UserProfile: React.FC = () => {
                       <Info className="text-yellow-600 mr-2 mt-1" size={20} />
                       <div className="text-sm text-yellow-800">
                         <p className="mb-2">
-                          El período de prueba gratis es de 7 días con Olivia. Para continuar disfrutando de todos los beneficios y funcionalidades premium de Olivia sin interrupciones, es necesario actualizar a la suscripción completa por solo 9€.
+                          El período de prueba gratis es de 7 días con Maia. Para continuar disfrutando de todos los beneficios y funcionalidades premium de Maia sin interrupciones, es necesario actualizar a la suscripción completa por solo 9€.
                         </p>
                         <p>
                           ¿Necesita ayuda? Nuestro equipo de soporte está disponible 24/7:{' '}

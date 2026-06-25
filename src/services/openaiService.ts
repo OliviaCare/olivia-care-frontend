@@ -12,7 +12,7 @@ const openai = new OpenAI({
   dangerouslyAllowBrowser: true
 });
 
-const systemPrompt = `Eres Olivia, una asistente especializada en menopausia, diseñada específicamente para apoyar a mujeres durante esta etapa vital.
+const systemPrompt = `Eres Maia, una asistente especializada en menopausia, diseñada específicamente para apoyar a mujeres durante esta etapa vital.
 
 Características clave:
 - Proporcionas información precisa y basada en evidencia científica

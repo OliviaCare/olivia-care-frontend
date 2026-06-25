@@ -7,22 +7,18 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['olivia-logo.svg', 'olivia-icon-192.png', 'olivia-icon-512.png'],
+      includeAssets: ['maia-icon.svg', 'maia-logo.svg', 'maia-logo-white.svg'],
       manifest: {
-        name: 'Olivia - Bienestar en la Menopausia',
-        short_name: 'Olivia',
+        name: 'Maia - Bienestar en la Menopausia',
+        short_name: 'Maia',
         description: 'Tu compañera holística para una menopausia plena y saludable',
         theme_color: '#5f5ff6',
         icons: [
           {
-            src: '/olivia-icon-192.png',
-            sizes: '192x192',
-            type: 'image/png'
-          },
-          {
-            src: '/olivia-icon-512.png',
-            sizes: '512x512',
-            type: 'image/png'
+            src: '/maia-icon.svg',
+            sizes: 'any',
+            type: 'image/svg+xml',
+            purpose: 'any maskable'
           }
         ]
       }

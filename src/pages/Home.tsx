@@ -12,7 +12,7 @@ const Home: React.FC = () => {
 
   return (
     <div className="text-center max-w-6xl mx-auto px-4">
-      <h1 className="text-4xl font-bold text-olivia-primary mb-6">Bienvenida a Olivia</h1>
+      <h1 className="text-4xl font-bold text-olivia-primary mb-6">Bienvenida a Maia</h1>
       <p className="text-xl text-gray-600 mb-12">Tu compañera para una menopausia plena y saludable</p>
       
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">

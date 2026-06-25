@@ -189,7 +189,7 @@ const Community: React.FC = () => {
   return (
     <div className="max-w-4xl mx-auto">
       <div className="bg-white p-6 rounded-lg shadow-md mb-6">
-        <h1 className="text-2xl font-bold text-purple-800 mb-4">Comunidad Olivia</h1>
+        <h1 className="text-2xl font-bold text-purple-800 mb-4">Comunidad Maia</h1>
         <p className="text-gray-600 mb-6">
           Un espacio seguro para compartir experiencias, hacer preguntas y apoyarnos mutuamente.
         </p>

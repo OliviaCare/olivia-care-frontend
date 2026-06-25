@@ -374,7 +374,7 @@ const AlimentosMenopausia = () => {
         </p>
         <div className="mt-6">
           <a
-            href="https://oliviacare.es/10-alimentos-para-reducir-los-sintomas-de-la-menopausia-de-forma-natural/"
+            href="https://maiacare.es/10-alimentos-para-reducir-los-sintomas-de-la-menopausia-de-forma-natural/"
             className="bg-purple-600 text-white py-3 px-6 rounded-lg hover:bg-purple-700 transition-colors inline-flex items-center"
             target="_blank"
             rel="noopener noreferrer"

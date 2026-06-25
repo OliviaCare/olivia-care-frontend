@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Menu, X, User, Award, Home, Book, Activity, Users, Trophy, LogIn, UserPlus } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
+import Logo from './Logo';
 
 const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -43,7 +44,7 @@ const Header: React.FC = () => {
       <header className="fixed top-0 left-0 right-0 bg-white shadow-md z-50">
         <div className="container mx-auto px-4 h-16 flex items-center">
           <Link to="/" className="flex items-center">
-            <img src="/olivia-logo.svg" alt="Olivia" className="h-8" />
+            <Logo className="h-8" />
           </Link>
         </div>
       </header>
@@ -75,7 +76,7 @@ const Header: React.FC = () => {
                 setIsAuthMenuOpen(false);
               }}
             >
-              <img src="/olivia-logo.svg" alt="Olivia" className="h-8" />
+              <Logo className="h-8" />
             </Link>
 
             {/* Menú de escritorio */}

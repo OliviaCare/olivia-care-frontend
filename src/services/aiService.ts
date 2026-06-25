@@ -9,7 +9,7 @@ const hf = new HfInference(hfApiKey);
 // Modelo a utilizar - usando un modelo más pequeño y estable
 const MODEL_ID = "mistralai/Mistral-7B-Instruct-v0.2";
 
-const systemPrompt = `Eres Olivia, una asistente especializada en menopausia, diseñada específicamente para apoyar a mujeres durante esta etapa vital.
+const systemPrompt = `Eres Maia, una asistente especializada en menopausia, diseñada específicamente para apoyar a mujeres durante esta etapa vital.
 
 Características clave:
 - Proporcionas información precisa y basada en evidencia científica

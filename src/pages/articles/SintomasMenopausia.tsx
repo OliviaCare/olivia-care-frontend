@@ -202,7 +202,7 @@ const SintomasMenopausia = () => {
         </h2>
         <div className="bg-white p-6 rounded-lg shadow-md">
           <p className="text-gray-700 mb-4">
-            En Olivia, ofrecemos herramientas para ayudarte a monitorizar tus síntomas y recibir recomendaciones personalizadas:
+            En Maia, ofrecemos herramientas para ayudarte a monitorizar tus síntomas y recibir recomendaciones personalizadas:
           </p>
           <ul className="list-disc pl-6 text-gray-700 space-y-2 mb-6">
             <li>Seguimiento diario de síntomas</li>
@@ -211,7 +211,7 @@ const SintomasMenopausia = () => {
             <li>Comunidad de apoyo</li>
           </ul>
           <a
-            href="https://oliviacare.es/services-page/"
+            href="https://maiacare.es/services-page/"
             className="bg-purple-600 text-white py-3 px-6 rounded-lg hover:bg-purple-700 transition-colors inline-flex items-center"
             target="_blank"
             rel="noopener noreferrer"

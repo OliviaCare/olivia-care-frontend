@@ -14,7 +14,7 @@ const Terms: React.FC = () => {
 
         <div className="prose prose-purple max-w-none">
           <p className="text-gray-700 mb-8">
-            ¡Gracias por utilizar Olivia! A continuación te explicamos las
+            ¡Gracias por utilizar Maia! A continuación te explicamos las
             condiciones que rigen el uso de nuestra plataforma digital.
           </p>
 
@@ -28,10 +28,10 @@ const Terms: React.FC = () => {
               B87817904, inscrita en el Registro Mercantil de Madrid, pudiendo
               ser contactada en{" "}
               <a
-                href="mailto:olivia@byld.es"
+                href="mailto:info@maiacare.es"
                 className="text-purple-600 hover:text-purple-800"
               >
-                olivia@byld.es
+                info@maiacare.es
               </a>
               .
             </p>
@@ -42,7 +42,7 @@ const Terms: React.FC = () => {
               2. Aceptación de los Términos
             </h3>
             <p className="text-gray-700">
-              Al acceder o utilizar la plataforma Olivia, aceptas cumplir y
+              Al acceder o utilizar la plataforma Maia, aceptas cumplir y
               estar sujeto a estos Términos de Uso. Si no estás de acuerdo con
               estos términos, no debes utilizar nuestra plataforma. El acceso,
               navegación o utilización de la plataforma implica la aceptación
@@ -55,7 +55,7 @@ const Terms: React.FC = () => {
               3. Descripción del Servicio
             </h3>
             <p className="text-gray-700">
-              Olivia es una plataforma digital que ofrece planes personalizados
+              Maia es una plataforma digital que ofrece planes personalizados
               y holísticos para mujeres en la menopausia, con el objetivo de
               ayudarles a gestionar los síntomas y mejorar su bienestar. Los
               servicios incluyen planes de bienestar, contenido educativo y
@@ -69,7 +69,7 @@ const Terms: React.FC = () => {
               4. Elegibilidad
             </h3>
             <p className="text-gray-700">
-              Para utilizar Olivia, debes tener al menos 18 años de edad. Al
+              Para utilizar Maia, debes tener al menos 18 años de edad. Al
               registrarte, confirmas que cumples con este requisito y que toda
               la información proporcionada es veraz y precisa. El uso por parte
               de menores de edad está prohibido.
@@ -100,7 +100,7 @@ const Terms: React.FC = () => {
             </h3>
             <ul className="list-disc pl-6 space-y-2 text-gray-700">
               <li>
-                Los servicios de Olivia son para uso personal y no comercial.
+                Los servicios de Maia son para uso personal y no comercial.
               </li>
               <li>
                 No está permitido copiar, modificar, distribuir ni revender
@@ -138,7 +138,7 @@ const Terms: React.FC = () => {
             </h3>
             <p className="text-gray-700">
               Todos los derechos sobre el contenido de la plataforma, incluyendo
-              textos, gráficos, logos y software, pertenecen a Olivia o a sus
+              textos, gráficos, logos y software, pertenecen a Maia o a sus
               licenciantes. Se otorga una licencia limitada, no exclusiva y
               revocable para acceder y utilizar la plataforma.
             </p>
@@ -149,7 +149,7 @@ const Terms: React.FC = () => {
               9. Exención de Asesoramiento Médico
             </h3>
             <p className="text-gray-700">
-              Olivia no proporciona servicios médicos, diagnósticos, ni
+              Maia no proporciona servicios médicos, diagnósticos, ni
               asesoramiento profesional sanitario. Todo el contenido ofrecido en
               la plataforma tiene fines meramente informativos y de apoyo. Las
               recomendaciones personalizadas se basan en la información
@@ -165,13 +165,13 @@ const Terms: React.FC = () => {
               10. Exclusión de Garantías y de Responsabilidad
             </h3>
             <ul className="list-disc pl-6 space-y-2 text-gray-700">
-              <li>El uso de Olivia es bajo tu propio riesgo.</li>
+              <li>El uso de Maia es bajo tu propio riesgo.</li>
               <li>
                 No garantizamos que el servicio estará libre de errores ni que
                 los resultados serán exactos.
               </li>
               <li>
-                Olivia no es responsable por daños indirectos, fallos técnicos,
+                Maia no es responsable por daños indirectos, fallos técnicos,
                 ataques informáticos o interrupciones del servicio por causas
                 externas (como caídas de red, fuerza mayor, etc.).
               </li>
@@ -183,7 +183,7 @@ const Terms: React.FC = () => {
               11. Contenido de Terceros y Enlaces Externos
             </h3>
             <p className="text-gray-700">
-              Olivia puede incluir enlaces a sitios web externos. No somos
+              Maia puede incluir enlaces a sitios web externos. No somos
               responsables por su contenido, exactitud ni políticas.
               Recomendamos revisar sus términos antes de interactuar con ellos.
             </p>
@@ -212,10 +212,10 @@ const Terms: React.FC = () => {
                 deberán hacerlo a través del enlace incluido en el correo de
                 confirmación de la cita, o bien escribiendo a nuestro equipo a{" "}
                 <a
-                  href="mailto:hola@olivia.es"
+                  href="mailto:info@maiacare.es"
                   className="text-purple-600 hover:text-purple-800"
                 >
-                  hola@olivia.es
+                  info@maiacare.es
                 </a>
                 .
               </p>
@@ -225,7 +225,7 @@ const Terms: React.FC = () => {
               </p>
               <p>
                 En caso de que la cancelación sea realizada por el profesional o
-                por causas atribuibles a Olivia, se ofrecerá a la usuaria la
+                por causas atribuibles a Maia, se ofrecerá a la usuaria la
                 posibilidad de reprogramar sin coste o, si lo prefiere, obtener
                 el reembolso íntegro del importe abonado.
               </p>
@@ -250,7 +250,7 @@ const Terms: React.FC = () => {
               15. Indemnización
             </h3>
             <p className="text-gray-700">
-              Aceptas indemnizar a Olivia frente a cualquier reclamación o daño
+              Aceptas indemnizar a Maia frente a cualquier reclamación o daño
               derivado de tu uso indebido de la plataforma o del incumplimiento
               de estos Términos.
             </p>
@@ -276,10 +276,10 @@ const Terms: React.FC = () => {
               Política de Cookies. Al utilizar la plataforma, aceptas estas
               políticas. Puedes ejercer tus derechos escribiendo a{" "}
               <a
-                href="mailto:olivia@byld.es"
+                href="mailto:info@maiacare.es"
                 className="text-purple-600 hover:text-purple-800"
               >
-                olivia@byld.es
+                info@maiacare.es
               </a>
               .
             </p>

@@ -1,11 +1,11 @@
-const CACHE_NAME = 'olivia-cache-v1';
+const CACHE_NAME = 'maia-cache-v1';
 const urlsToCache = [
   '/',
   '/index.html',
   '/manifest.json',
-  '/olivia-logo.svg',
-  '/olivia-icon-192.png',
-  '/olivia-icon-512.png'
+  '/maia-logo.svg',
+  '/maia-logo-white.svg',
+  '/maia-icon.svg'
 ];
 
 self.addEventListener('install', event => {

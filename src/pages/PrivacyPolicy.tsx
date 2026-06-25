@@ -11,7 +11,7 @@ const PrivacyPolicy: React.FC = () => {
           <section className="mb-8">
             <h3 className="text-xl font-semibold text-purple-700 mb-4">1. Introducción</h3>
             <p className="text-gray-700 mb-4">
-              En Olivia, valoramos la privacidad de nuestras usuarias y nos comprometemos a proteger la información personal que comparten con nosotros. 
+              En Maia, valoramos la privacidad de nuestras usuarias y nos comprometemos a proteger la información personal que comparten con nosotros. 
               Estas políticas de privacidad explican cómo recopilamos, utilizamos, almacenamos y protegemos los datos personales de nuestras usuarias. 
               Al utilizar nuestra plataforma, aceptas las prácticas descritas en este documento.
             </p>
@@ -21,7 +21,7 @@ const PrivacyPolicy: React.FC = () => {
             <h3 className="text-xl font-semibold text-purple-700 mb-4">2. Información Recopilada</h3>
             <ul className="list-disc pl-6 space-y-2 text-gray-700">
               <li>
-                <strong>Datos Personales</strong>: Cuando te registras en Olivia, recopilamos información como tu nombre, 
+                <strong>Datos Personales</strong>: Cuando te registras en Maia, recopilamos información como tu nombre, 
                 dirección de correo electrónico, fecha de nacimiento, y detalles relacionados con los síntomas de la 
                 menopausia para crear un perfil personalizado.
               </li>
@@ -61,7 +61,7 @@ const PrivacyPolicy: React.FC = () => {
             </p>
             <ul className="list-disc pl-6 space-y-2 text-gray-700">
               <li>
-                <strong>Consentimiento</strong>: Al registrarte y utilizar Olivia, das tu consentimiento explícito para 
+                <strong>Consentimiento</strong>: Al registrarte y utilizar Maia, das tu consentimiento explícito para 
                 el tratamiento de tus datos personales y de salud.
               </li>
               <li>
@@ -83,11 +83,11 @@ const PrivacyPolicy: React.FC = () => {
               Si tienes alguna pregunta o inquietud sobre nuestras políticas de privacidad o sobre cómo manejamos tu 
               información, puedes contactarnos en: 
               <a 
-                href="mailto:hola@oliviacare.es" 
+                href="mailto:info@maiacare.es" 
                 className="flex items-center ml-2 text-purple-600 hover:text-purple-800"
               >
                 <Mail size={18} className="mr-1" />
-                hola@oliviacare.es
+                info@maiacare.es
               </a>
             </p>
           </section>

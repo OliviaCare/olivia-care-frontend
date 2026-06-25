@@ -24,7 +24,7 @@ const professionals: Professional[] = [
     name: 'Dra. Inés Pérez Zabala',
     specialty: 'Ginecología y Medicina Menopáusica',
     image: 'https://images.unsplash.com/photo-1527613426441-4da17471b66d?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
-    calendlyUrl: 'https://calendly.com/olivia-byld/consulta-sin-coste',
+    calendlyUrl: 'https://calendly.com/d/cm3j-sqs-59n/consulta-online',
     consultationTime: '45 minutos',
     languages: ['Español', 'Inglés'],
     location: 'Consulta Virtual',
@@ -47,7 +47,7 @@ const professionals: Professional[] = [
     name: 'Sonia Ruiz',
     specialty: 'Coach en Menopausia',
     image: 'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
-    calendlyUrl: 'https://calendly.com/olivia-byld/consulta-sin-coste',
+    calendlyUrl: 'https://calendly.com/d/cm3j-sqs-59n/consulta-online',
     consultationTime: '60 minutos',
     languages: ['Español'],
     location: 'Consulta Virtual',
@@ -70,7 +70,7 @@ const professionals: Professional[] = [
     name: 'Aoife McGale',
     specialty: 'Coach en Menopausia y Bienestar',
     image: 'https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
-    calendlyUrl: 'https://calendly.com/olivia-byld/consulta-sin-coste',
+    calendlyUrl: 'https://calendly.com/d/cm3j-sqs-59n/consulta-online',
     consultationTime: '50 minutos',
     languages: ['Español', 'Inglés'],
     location: 'Consulta Virtual',
@@ -93,7 +93,7 @@ const professionals: Professional[] = [
     name: 'Dr. Carlos Pérez',
     specialty: 'Endocrinología y Nutrición',
     image: 'https://images.unsplash.com/photo-1537368910025-700350fe46c7?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
-    calendlyUrl: 'https://calendly.com/olivia-byld/consulta-sin-coste',
+    calendlyUrl: 'https://calendly.com/d/cm3j-sqs-59n/consulta-online',
     consultationTime: '60 minutos',
     languages: ['Español', 'Inglés', 'Francés'],
     location: 'Consulta Virtual',
@@ -116,7 +116,7 @@ const professionals: Professional[] = [
     name: 'Dra. Ana Gómez',
     specialty: 'Psicología y Terapia Cognitivo-Conductual',
     image: 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
-    calendlyUrl: 'https://calendly.com/olivia-byld/consulta-sin-coste',
+    calendlyUrl: 'https://calendly.com/d/cm3j-sqs-59n/consulta-online',
     consultationTime: '50 minutos',
     languages: ['Español', 'Portugués'],
     location: 'Consulta Virtual',
@@ -162,7 +162,7 @@ const Professionals: React.FC = () => {
   const handleSchedule = (professional: Professional) => {
     if (window.Calendly) {
       window.Calendly.initPopupWidget({
-        url: 'https://calendly.com/olivia-byld/video-consulta-profesionales'
+        url: 'https://calendly.com/d/cm3j-sqs-59n/consulta-online'
       });
     } else {
       setSelectedProfessional(professional);
@@ -262,10 +262,10 @@ const Professionals: React.FC = () => {
               </p>
             </div>
             <InlineWidget
-              url="https://calendly.com/olivia-byld/video-consulta-profesionales"
+              url="https://calendly.com/d/cm3j-sqs-59n/consulta-online"
               styles={{ height: 'calc(80vh - 140px)' }}
               prefill={{
-                name: "Usuario de Olivia",
+                name: "Usuario de Maia",
                 email: "usuario@ejemplo.com",
               }}
             />

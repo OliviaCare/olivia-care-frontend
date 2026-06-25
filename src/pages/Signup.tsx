@@ -227,7 +227,7 @@ const Signup: React.FC = () => {
         {wellhubTempUser && (
           <div className="bg-blue-50 p-4 rounded-lg mb-6">
             <p className="text-sm text-blue-800">
-              ¡Bienvenido desde Wellhub! Completa tu registro para acceder a Olivia Care.
+              ¡Bienvenido desde Wellhub! Completa tu registro para acceder a Maia Care.
             </p>
           </div>
         )}

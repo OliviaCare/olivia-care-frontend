@@ -226,7 +226,7 @@ const TerapiaHormonalSustitutiva = () => {
             Es importante recordar que la decisión de iniciar la THS debe tomarse en consulta con un profesional de la salud, quien evaluará tu historial médico, tus síntomas y tus factores de riesgo personales.
           </p>
           <p className="text-gray-700 mb-6">
-            En Olivia, te conectamos con especialistas en menopausia que pueden ayudarte a tomar decisiones informadas sobre la THS y otros tratamientos disponibles.
+            En Maia, te conectamos con especialistas en menopausia que pueden ayudarte a tomar decisiones informadas sobre la THS y otros tratamientos disponibles.
           </p>
           <a
             href="/professionals"

@@ -19,7 +19,7 @@ const educationalContent = [
     link: '/education/alimentos-menopausia',
     category: 'lifestyle',
     title: '10 Alimentos para Reducir los Síntomas de la Menopausia',
-    author: 'Equipo Nutricional Olivia',
+    author: 'Equipo Nutricional Maia',
     readTime: '8 minutos',
     description: 'Descubre los 10 alimentos que pueden ayudarte a reducir los síntomas de la menopausia de forma natural y mejorar tu bienestar general durante esta etapa.',
     sections: [
@@ -39,7 +39,7 @@ const educationalContent = [
     link: '/education/terapia-hormonal-sustitutiva',
     category: 'treatments',
     title: 'Terapia Hormonal Sustitutiva (THS): Guía Básica',
-    author: 'Equipo Médico Olivia',
+    author: 'Equipo Médico Maia',
     readTime: '10 minutos',
     description: 'Información esencial sobre la Terapia Hormonal Sustitutiva, sus beneficios, riesgos y consideraciones importantes para tomar decisiones informadas.',
     sections: [
@@ -59,7 +59,7 @@ const educationalContent = [
     link: '/education/sintomas-menopausia',
     category: 'symptoms',
     title: 'Síntomas de la Menopausia: Guía Completa',
-    author: 'Equipo Olivia',
+    author: 'Equipo Maia',
     readTime: '12 minutos',
     description: 'Información detallada sobre los síntomas más comunes de la menopausia, cómo identificarlos y estrategias para manejarlos.',
     sections: [
@@ -174,7 +174,7 @@ const educationalContent = [
   {
     id: 5,
     type: 'workshop',
-    link: 'https://oliviacare.es/contacts/',
+    link: 'https://maiacare.es/contacts/',
     category: 'mental',
     title: 'Taller: Mindfulness y Gestión Emocional',
     instructor: 'Aoife McGale',

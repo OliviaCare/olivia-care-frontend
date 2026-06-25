@@ -27,7 +27,7 @@ const AIAssistant: React.FC = () => {
   useEffect(() => {
     setMessages([{
       role: 'assistant',
-      content: '¡Hola! Soy Olivia, tu asistente virtual especializada en menopausia. Estoy aquí para responder tus preguntas, ofrecer apoyo y compartir información basada en evidencia científica. ¿En qué puedo ayudarte hoy?',
+      content: '¡Hola! Soy Maia, tu asistente virtual especializada en menopausia. Estoy aquí para responder tus preguntas, ofrecer apoyo y compartir información basada en evidencia científica. ¿En qué puedo ayudarte hoy?',
       timestamp: new Date()
     }]);
   }, []);
@@ -116,7 +116,7 @@ const AIAssistant: React.FC = () => {
         <div className="flex justify-between items-center">
           <h2 className="text-lg font-semibold text-purple-800 flex items-center">
             <Bot className="mr-2" size={24} />
-            Olivia - Tu Asistente Virtual
+            Maia - Tu Asistente Virtual
           </h2>
           <button 
             onClick={toggleMode}

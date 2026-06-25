@@ -23,7 +23,7 @@ const Pricing: React.FC = () => {
           Planes y Precios
         </h1>
         <p className="text-gray-600 max-w-2xl mx-auto">
-          Elige el plan que mejor se adapte a tus necesidades. Todos los planes incluyen acceso a las funcionalidades básicas de Olivia.
+          Elige el plan que mejor se adapte a tus necesidades. Todos los planes incluyen acceso a las funcionalidades básicas de Maia.
         </p>
       </div>
 
@@ -42,7 +42,7 @@ const Pricing: React.FC = () => {
               <span className="text-gray-600 ml-2">/ 7 días</span>
             </div>
             <p className="text-gray-600 mb-6">
-              Prueba todas las funcionalidades premium de Olivia sin compromiso.
+              Prueba todas las funcionalidades premium de Maia sin compromiso.
             </p>
             <ul className="space-y-3 mb-8">
               {features.map((feature, index) => (
@@ -76,7 +76,7 @@ const Pricing: React.FC = () => {
               <span className="ml-2">/ mes</span>
             </div>
             <p className="mb-6 text-purple-100">
-              Acceso completo a todas las funcionalidades y beneficios de Olivia.
+              Acceso completo a todas las funcionalidades y beneficios de Maia.
             </p>
             <ul className="space-y-3 mb-8">
               {features.map((feature, index) => (
@@ -118,7 +118,7 @@ const Pricing: React.FC = () => {
               ¿Qué incluye el período de prueba?
             </h4>
             <p className="text-gray-600">
-              El período de prueba de 7 días incluye acceso completo a todas las funcionalidades premium de Olivia.
+              El período de prueba de 7 días incluye acceso completo a todas las funcionalidades premium de Maia.
             </p>
           </div>
           <div>
