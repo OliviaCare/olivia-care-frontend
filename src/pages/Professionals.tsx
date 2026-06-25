@@ -304,12 +304,4 @@ const Professionals: React.FC = () => {
   );
 };
 
-declare global {
-  interface Window {
-    Calendly?: {
-      initPopupWidget: (options: { url: string }) => void;
-    };
-  }
-}
-
 export default Professionals;

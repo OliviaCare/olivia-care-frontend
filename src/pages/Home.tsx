@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Sun, Brain, Zap } from 'lucide-react';
+import CalendlyBadge from '../components/CalendlyBadge';
 
 const Home: React.FC = () => {
   const navigate = useNavigate();
@@ -12,6 +13,7 @@ const Home: React.FC = () => {
 
   return (
     <div className="text-center max-w-6xl mx-auto px-4">
+      <CalendlyBadge />
       <h1 className="text-4xl font-bold text-olivia-primary mb-6">Bienvenida a Maia</h1>
       <p className="text-xl text-gray-600 mb-12">Tu compañera para una menopausia plena y saludable</p>
       

@@ -4,6 +4,7 @@ import { AuthProvider } from './contexts/AuthContext';
 import { PrivateRoute } from './components/PrivateRoute';
 import Header from './components/Header';
 import Footer from './components/Footer';
+import CalendlyGate from './components/CalendlyGate';
 import Notification from './components/Notification';
 import Home from './pages/Home';
 import Login from './pages/Login';
@@ -66,17 +67,17 @@ const App: React.FC = () => {
               } />
               <Route path="/symptom-tracker" element={
                 <PrivateRoute>
-                  <SymptomTracker />
+                  <CalendlyGate><SymptomTracker /></CalendlyGate>
                 </PrivateRoute>
               } />
               <Route path="/professionals" element={
                 <PrivateRoute>
-                  <Professionals />
+                  <CalendlyGate><Professionals /></CalendlyGate>
                 </PrivateRoute>
               } />
               <Route path="/community" element={
                 <PrivateRoute>
-                  <Community />
+                  <CalendlyGate><Community /></CalendlyGate>
                 </PrivateRoute>
               } />
               <Route path="/profile" element={
