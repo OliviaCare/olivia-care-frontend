@@ -5,6 +5,7 @@ import { PrivateRoute } from './components/PrivateRoute';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import CalendlyGate from './components/CalendlyGate';
+import CalendlyCleanup from './components/CalendlyCleanup';
 import Notification from './components/Notification';
 import Home from './pages/Home';
 import Login from './pages/Login';
@@ -36,6 +37,7 @@ const App: React.FC = () => {
       <AuthProvider>
         <div className="flex flex-col min-h-screen bg-pink-50">
           <Header />
+          <CalendlyCleanup />
           <main className="flex-grow container mx-auto px-4 py-8">
             <Routes>
               <Route path="/" element={<Home />} />
