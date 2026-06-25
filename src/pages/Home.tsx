@@ -11,6 +11,19 @@ const Home: React.FC = () => {
     navigate('/assessment', { replace: true });
   };
 
+  const CALENDLY_URL = 'https://calendly.com/d/cm3j-sqs-59n/consulta-online';
+  const openCalendly = () => {
+    try {
+      if (window.Calendly?.initPopupWidget) {
+        window.Calendly.initPopupWidget({ url: CALENDLY_URL });
+        return;
+      }
+    } catch (e) {
+      // Si Calendly falla, abrimos en una pestaña como respaldo.
+    }
+    window.open(CALENDLY_URL, '_blank');
+  };
+
   return (
     <div className="text-center max-w-6xl mx-auto px-4">
       <CalendlyBadge />
@@ -35,12 +48,20 @@ const Home: React.FC = () => {
         />
       </div>
       
-      <button
-        onClick={handleStartAssessment}
-        className="bg-olivia-primary text-white px-8 py-3 rounded-full text-lg font-semibold hover:bg-purple-700 transition duration-300 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2"
-      >
-        Comienza tu evaluación
-      </button>
+      <div className="flex flex-col items-center gap-4">
+        <button
+          onClick={handleStartAssessment}
+          className="bg-olivia-primary text-white px-8 py-3 rounded-full text-lg font-semibold hover:bg-purple-700 transition duration-300 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2"
+        >
+          Comienza tu evaluación
+        </button>
+        <button
+          onClick={openCalendly}
+          className="border-2 border-olivia-primary text-olivia-primary px-8 py-3 rounded-full text-lg font-semibold hover:bg-olivia-primary hover:text-white transition duration-300 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2"
+        >
+          Consulta online
+        </button>
+      </div>
     </div>
   );
 };
