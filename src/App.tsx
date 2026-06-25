@@ -6,6 +6,7 @@ import Header from './components/Header';
 import Footer from './components/Footer';
 import CalendlyGate from './components/CalendlyGate';
 import CalendlyCleanup from './components/CalendlyCleanup';
+import ErrorBoundary from './components/ErrorBoundary';
 import Notification from './components/Notification';
 import Home from './pages/Home';
 import Login from './pages/Login';
@@ -39,6 +40,7 @@ const App: React.FC = () => {
           <Header />
           <CalendlyCleanup />
           <main className="flex-grow container mx-auto px-4 py-8">
+            <ErrorBoundary>
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/login" element={<Login />} />
@@ -93,6 +95,7 @@ const App: React.FC = () => {
                 </PrivateRoute>
               } />
             </Routes>
+            </ErrorBoundary>
           </main>
           <Footer />
           <Notification />

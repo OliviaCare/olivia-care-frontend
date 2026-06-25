@@ -10,8 +10,12 @@ const CalendlyCleanup: React.FC = () => {
   const location = useLocation();
 
   useEffect(() => {
-    if (window.Calendly?.closePopupWidget) {
-      window.Calendly.closePopupWidget();
+    try {
+      if (window.Calendly?.closePopupWidget) {
+        window.Calendly.closePopupWidget();
+      }
+    } catch (e) {
+      // Ignoramos errores internos de Calendly al cerrar.
     }
     document
       .querySelectorAll('.calendly-overlay, .calendly-popup')
