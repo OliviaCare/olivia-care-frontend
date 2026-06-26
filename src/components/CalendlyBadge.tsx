@@ -1,20 +1,45 @@
 import React, { useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 
 const CALENDLY_URL = 'https://calendly.com/d/cm3j-sqs-59n/consulta-online';
 
+// Rutas donde se muestra el botón flotante de Calendly.
+const showBadgeOn = (path: string): boolean =>
+  path === '/' ||
+  path === '/dashboard' ||
+  path === '/education' ||
+  path.startsWith('/education/');
+
 /**
- * Botón flotante ("badge") de Calendly, solo en la página donde se monte (Inicio).
+ * Botón flotante ("badge") de Calendly, montado una sola vez a nivel de App.
  *
- * Importante: NO eliminamos el nodo del badge al desmontar. Calendly guarda una
- * referencia interna y, al reinicializar, llama a su propio destroy() que hace
- * removeChild. Si ya lo hubiéramos quitado del DOM, ese removeChild fallaría
- * (Cannot read properties of null) y tumbaría la app. Por eso lo OCULTAMOS.
+ * Se inicializa UNA vez (cuando Calendly está listo y estamos en una ruta
+ * permitida) y luego solo se muestra/oculta según la ruta. No se elimina ni se
+ * reinicializa en cada navegación: eso evita el crash de removeChild que tumbaba
+ * la app, y de paso es más eficiente.
  */
 const CalendlyBadge: React.FC = () => {
+  const location = useLocation();
+
   useEffect(() => {
+    const show = showBadgeOn(location.pathname);
     let interval: number | undefined;
 
-    const init = (): boolean => {
+    const apply = (): boolean => {
+      const existing = document.querySelector(
+        '.calendly-badge-widget'
+      ) as HTMLElement | null;
+
+      if (!show) {
+        if (existing) existing.style.display = 'none';
+        return true;
+      }
+
+      // Ruta permitida: mostrar el badge (crearlo si aún no existe).
+      if (existing) {
+        existing.style.display = '';
+        return true;
+      }
       if (!window.Calendly?.initBadgeWidget) return false;
       try {
         window.Calendly.initBadgeWidget({
@@ -24,27 +49,22 @@ const CalendlyBadge: React.FC = () => {
           textColor: '#ffffff',
         });
       } catch (e) {
-        // Calendly puede lanzar al reinicializar un badge previo; lo ignoramos.
         console.warn('Calendly badge init falló:', e);
       }
       return true;
     };
 
-    if (!init()) {
+    if (!apply()) {
       interval = window.setInterval(() => {
-        if (init() && interval) window.clearInterval(interval);
+        if (apply() && interval) window.clearInterval(interval);
       }, 300);
       window.setTimeout(() => interval && window.clearInterval(interval), 8000);
     }
 
     return () => {
       if (interval) window.clearInterval(interval);
-      // Ocultar (no eliminar) para no romper el destroy interno de Calendly.
-      document.querySelectorAll('.calendly-badge-widget').forEach((el) => {
-        (el as HTMLElement).style.display = 'none';
-      });
     };
-  }, []);
+  }, [location.pathname]);
 
   return null;
 };

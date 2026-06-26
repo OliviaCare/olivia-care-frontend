@@ -7,6 +7,7 @@ import Footer from './components/Footer';
 import CalendlyGate from './components/CalendlyGate';
 import CalendlyCleanup from './components/CalendlyCleanup';
 import ErrorBoundary from './components/ErrorBoundary';
+import CalendlyBadge from './components/CalendlyBadge';
 import Notification from './components/Notification';
 import Home from './pages/Home';
 import Login from './pages/Login';
@@ -39,6 +40,7 @@ const App: React.FC = () => {
         <div className="flex flex-col min-h-screen bg-pink-50">
           <Header />
           <CalendlyCleanup />
+          <CalendlyBadge />
           <main className="flex-grow container mx-auto px-4 py-8">
             <ErrorBoundary>
             <Routes>
