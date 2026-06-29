@@ -9,6 +9,7 @@ import {
   Tooltip
 } from 'recharts';
 import { Target, TrendingUp, AlertCircle, CheckCircle, Info } from 'lucide-react';
+import PricingPlans from './PricingPlans';
 
 interface WellnessDashboardProps {
   cervantesResults: {
@@ -406,6 +407,9 @@ const WellnessDashboard: React.FC<WellnessDashboardProps> = ({ cervantesResults 
           ))}
         </div>
       </div>
+
+      {/* Planes Maia */}
+      <PricingPlans />
 
       {/* Próximas Acciones */}
       <div className="bg-white p-6 rounded-lg shadow-md">
