@@ -24,9 +24,8 @@ const Register: React.FC = () => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
+    phone: '',
     password: '',
-    confirmPassword: '',
-    dateOfBirth: '',
     cardNumber: '',
     expiryDate: '',
     cvv: '',
@@ -67,16 +66,11 @@ const Register: React.FC = () => {
     e.preventDefault();
     
     if (currentStep === 1) {
-      if (!formData.email || !formData.name || !formData.password) {
+      if (!formData.email || !formData.name || !formData.phone || !formData.password) {
         setError('Por favor completa todos los campos requeridos');
         return;
       }
-      
-      if (formData.password !== formData.confirmPassword) {
-        setError('Las contraseñas no coinciden');
-        return;
-      }
-      
+
       setError('');
       // Skip to final step since payment is hidden
       handleAuth(e);
@@ -105,10 +99,6 @@ const Register: React.FC = () => {
           formData.password
         );
       } else {
-        if (formData.password !== formData.confirmPassword) {
-          throw new Error('Las contraseñas no coinciden');
-        }
-        
         try {
           userCredential = await createUserWithEmailAndPassword(
             auth,
@@ -149,15 +139,13 @@ const Register: React.FC = () => {
 
   const handlePaymentAndProfile = async (userId: string) => {
     try {
-      if (!formData.dateOfBirth) {
-        throw new Error('La fecha de nacimiento es requerida');
-      }
+      const phoneNumber = '+34' + formData.phone.replace(/\D/g, '');
 
       await updateUserProfile(userId, {
         name: formData.name,
-        dateOfBirth: formData.dateOfBirth,
         assessmentResults: state.results,
         profile: {
+          phoneNumber,
           completionStatus: 'COMPLETED',
           onboardingStep: 'PAYMENT_COMPLETED',
           paymentStatus: 'ACTIVE'
@@ -202,7 +190,7 @@ const Register: React.FC = () => {
                 Tus resultados están listos
               </h2>
               <p className="text-gray-600">
-                Crea tu cuenta gratis para ver tu Escala Cervantes y tu plan personalizado.
+                Crea tu cuenta gratis para entender el impacto de los síntomas y obtener un plan personalizado.
               </p>
             </div>
           )}
@@ -228,10 +216,7 @@ const Register: React.FC = () => {
               <ul className="space-y-3">
                 <BenefitItem text="Tus resultados detallados de la Escala Cervantes" highlight />
                 <BenefitItem text="Plan personalizado según tus síntomas" />
-                <BenefitItem text="Acceso a especialistas en menopausia" />
-                <BenefitItem text="Seguimiento y evolución de síntomas" />
                 <BenefitItem text="Recursos educativos exclusivos" />
-                <BenefitItem text="Comunidad de apoyo" />
               </ul>
 
               <div className="mt-6 bg-amber-50 border border-amber-200 rounded-lg p-3 flex items-start gap-2">
@@ -314,23 +299,6 @@ const Register: React.FC = () => {
                     <div className="space-y-4">
                       <div>
                         <label className="block text-gray-700 text-sm font-medium mb-1">
-                          Correo electrónico <span className="text-red-500">*</span>
-                        </label>
-                        <div className="relative">
-                          <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
-                          <input
-                            type="email"
-                            name="email"
-                            value={formData.email}
-                            onChange={handleInputChange}
-                            className="w-full p-2 pl-10 border rounded focus:outline-none focus:ring-2 focus:ring-purple-600"
-                            required
-                          />
-                        </div>
-                      </div>
-
-                      <div>
-                        <label className="block text-gray-700 text-sm font-medium mb-1">
                           Nombre completo <span className="text-red-500">*</span>
                         </label>
                         <div className="relative">
@@ -348,16 +316,36 @@ const Register: React.FC = () => {
 
                       <div>
                         <label className="block text-gray-700 text-sm font-medium mb-1">
-                          Fecha de nacimiento <span className="text-red-500">*</span>
+                          Correo electrónico <span className="text-red-500">*</span>
                         </label>
                         <div className="relative">
-                          <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
+                          <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
                           <input
-                            type="date"
-                            name="dateOfBirth"
-                            value={formData.dateOfBirth}
+                            type="email"
+                            name="email"
+                            value={formData.email}
                             onChange={handleInputChange}
                             className="w-full p-2 pl-10 border rounded focus:outline-none focus:ring-2 focus:ring-purple-600"
+                            required
+                          />
+                        </div>
+                      </div>
+
+                      <div>
+                        <label className="block text-gray-700 text-sm font-medium mb-1">
+                          Teléfono <span className="text-red-500">*</span>
+                        </label>
+                        <div className="flex">
+                          <span className="inline-flex items-center px-3 border border-r-0 rounded-l bg-gray-50 text-gray-600 select-none">
+                            +34
+                          </span>
+                          <input
+                            type="tel"
+                            name="phone"
+                            value={formData.phone}
+                            onChange={handleInputChange}
+                            placeholder="600 000 000"
+                            className="w-full p-2 border rounded-r focus:outline-none focus:ring-2 focus:ring-purple-600"
                             required
                           />
                         </div>
@@ -380,24 +368,6 @@ const Register: React.FC = () => {
                           />
                         </div>
                         <p className="text-xs text-gray-500 mt-1">Mínimo 6 caracteres</p>
-                      </div>
-
-                      <div>
-                        <label className="block text-gray-700 text-sm font-medium mb-1">
-                          Confirmar contraseña <span className="text-red-500">*</span>
-                        </label>
-                        <div className="relative">
-                          <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
-                          <input
-                            type="password"
-                            name="confirmPassword"
-                            value={formData.confirmPassword}
-                            onChange={handleInputChange}
-                            className="w-full p-2 pl-10 border rounded focus:outline-none focus:ring-2 focus:ring-purple-600"
-                            required
-                            minLength={6}
-                          />
-                        </div>
                       </div>
                     </div>
 
