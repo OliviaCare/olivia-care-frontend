@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
-import { CreditCard, Shield, Lock, User, Check, Mail, ArrowLeft, ArrowRight, Calendar, CreditCard as CardIcon, SignalLow as PaypalLogo, Apple as AppleLogo } from 'lucide-react';
+import { CreditCard, Shield, Lock, User, Check, Mail, AlertTriangle, ArrowLeft, ArrowRight, Calendar, CreditCard as CardIcon, SignalLow as PaypalLogo, Apple as AppleLogo } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { updateUserProfile } from '../services/userService';
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
@@ -191,16 +191,19 @@ const Register: React.FC = () => {
       <div className="bg-white p-8 rounded-lg shadow-md">
         {/* Header and progress section */}
         <div className="mb-8">
-          <h2 className="text-2xl font-bold text-purple-800 mb-2">
-            {isLogin ? 'Inicia sesión' : `Paso ${currentStep} de ${showPaymentForm ? '2' : '1'}: ${currentStep === 1 ? 'Información básica' : 'Detalles de pago'}`}
-          </h2>
-          
-          {!isLogin && (
-            <div className="w-full bg-gray-200 rounded-full h-2 mb-4">
-              <div 
-                className="bg-purple-600 h-2 rounded-full transition-all duration-300"
-                style={{ width: `${(currentStep / (showPaymentForm ? 2 : 1)) * 100}%` }}
-              />
+          {isLogin ? (
+            <h2 className="text-2xl font-bold text-purple-800">Inicia sesión</h2>
+          ) : (
+            <div className="text-center">
+              <span className="inline-flex items-center gap-1 text-green-600 font-medium text-sm mb-2">
+                <Check size={16} /> Evaluación completada
+              </span>
+              <h2 className="text-3xl font-bold text-purple-800 mb-2">
+                Tus resultados están listos
+              </h2>
+              <p className="text-gray-600">
+                Crea tu cuenta gratis para ver tu Escala Cervantes y tu plan personalizado.
+              </p>
             </div>
           )}
         </div>
@@ -221,26 +224,33 @@ const Register: React.FC = () => {
           {/* Left column: Plan benefits */}
           <div className="md:w-2/5">
             <div className="bg-purple-50 p-6 rounded-lg mb-8 sticky top-24">
-              <h3 className="text-xl font-semibold mb-4">Tu plan personalizado incluye:</h3>
+              <h3 className="text-xl font-semibold mb-4">Al crear tu cuenta desbloqueas:</h3>
               <ul className="space-y-3">
-                <BenefitItem text="Resultados detallados de tu Escala Cervantes" />
+                <BenefitItem text="Tus resultados detallados de la Escala Cervantes" highlight />
                 <BenefitItem text="Plan personalizado según tus síntomas" />
                 <BenefitItem text="Acceso a especialistas en menopausia" />
                 <BenefitItem text="Seguimiento y evolución de síntomas" />
                 <BenefitItem text="Recursos educativos exclusivos" />
                 <BenefitItem text="Comunidad de apoyo" />
               </ul>
-              
+
+              <div className="mt-6 bg-amber-50 border border-amber-200 rounded-lg p-3 flex items-start gap-2">
+                <AlertTriangle className="text-amber-500 flex-shrink-0 mt-0.5" size={18} />
+                <p className="text-sm text-amber-800">
+                  Tu evaluación se guarda solo al crear tu cuenta. Si sales ahora, tendrás que repetir el test.
+                </p>
+              </div>
+
               <div className="mt-6 pt-6 border-t border-purple-200">
                 <div className="flex flex-col items-center text-center">
                   <div className="mb-2">
-                    <span className="text-gray-600 line-through text-lg">20€/mes</span>
+                    <span className="text-gray-500 line-through text-lg">5€/mes</span>
                     <span className="ml-2 bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm font-medium">
-                      7 días gratis
+                      Gratis para empezar
                     </span>
                   </div>
                   <p className="text-sm text-gray-600">
-                    Comienza tu prueba gratuita hoy
+                    Sin tarjeta · Acceso inmediato
                   </p>
                 </div>
               </div>
@@ -395,8 +405,11 @@ const Register: React.FC = () => {
                       type="submit"
                       className="w-full bg-purple-600 text-white p-3 rounded-lg hover:bg-purple-700 transition duration-300 flex items-center justify-center"
                     >
-                      Comenzar prueba gratuita
+                      Ver mis resultados
                     </button>
+                    <p className="text-xs text-center text-gray-500">
+                      Gratis · Sin tarjeta · Acceso inmediato
+                    </p>
                   </form>
                 ) : (
                   showPaymentForm && (
@@ -591,10 +604,10 @@ const Register: React.FC = () => {
   );
 };
 
-const BenefitItem: React.FC<{ text: string }> = ({ text }) => (
+const BenefitItem: React.FC<{ text: string; highlight?: boolean }> = ({ text, highlight }) => (
   <li className="flex items-center">
     <Check className="text-green-500 mr-2 flex-shrink-0" size={20} />
-    <span>{text}</span>
+    <span className={highlight ? 'font-semibold text-purple-800' : ''}>{text}</span>
   </li>
 );
 
