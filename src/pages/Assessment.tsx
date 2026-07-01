@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, ArrowRight, HelpCircle } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
@@ -32,6 +32,13 @@ const cervantesQuestions = [
   { id: 17, text: "Me cuesta expresar mis sentimientos", domain: "relacionPareja" }
 ];
 
+// Envía un evento a la capa de datos (dataLayer) para que lo recoja GTM.
+const pushDataLayer = (payload: Record<string, unknown>) => {
+  const w = window as unknown as { dataLayer?: unknown[] };
+  w.dataLayer = w.dataLayer || [];
+  w.dataLayer.push(payload);
+};
+
 const Assessment: React.FC = () => {
   const navigate = useNavigate();
   const { currentUser } = useAuth();
@@ -41,16 +48,33 @@ const Assessment: React.FC = () => {
   const [error, setError] = useState<string>('');
   const [loading, setLoading] = useState(false);
 
+  // Evento de inicio del quiz (funnel: primer paso).
+  useEffect(() => {
+    pushDataLayer({ event: 'quiz_inicio' });
+  }, []);
+
   const handleAnswer = async (value: number) => {
     if (loading) return;
 
-    const newAnswers = { ...answers, [cervantesQuestions[currentQuestion].id]: value };
+    const question = cervantesQuestions[currentQuestion];
+    const newAnswers = { ...answers, [question.id]: value };
     setAnswers(newAnswers);
+
+    // Evento de capa de datos por pregunta (nombre distinto para cada una).
+    pushDataLayer({
+      event: `quiz_pregunta_${question.id}`,
+      pregunta_numero: currentQuestion + 1,
+      pregunta_id: question.id,
+      pregunta_texto: question.text,
+      dominio: question.domain,
+      respuesta: value,
+    });
 
     if (currentQuestion < cervantesQuestions.length - 1) {
       setCurrentQuestion(currentQuestion + 1);
     } else {
       setLoading(true);
+      pushDataLayer({ event: 'quiz_completado', total_preguntas: cervantesQuestions.length });
       try {
         const results = calculateCervantesResults(newAnswers);
         
