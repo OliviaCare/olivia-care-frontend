@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Sun, Brain, Zap } from 'lucide-react';
+import RegisterLanding from '../components/RegisterLanding';
 
 const Home: React.FC = () => {
   const navigate = useNavigate();
@@ -59,6 +60,10 @@ const Home: React.FC = () => {
         >
           Consulta online
         </button>
+      </div>
+
+      <div className="text-left mt-16">
+        <RegisterLanding />
       </div>
     </div>
   );
