@@ -5,6 +5,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { updateUserProfile } from '../services/userService';
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
 import { auth } from '../lib/firebase';
+import RegisterLanding from '../components/RegisterLanding';
 
 interface LocationState {
   assessmentCompleted?: boolean;
@@ -175,7 +176,7 @@ const Register: React.FC = () => {
   }
 
   return (
-    <div className="max-w-3xl mx-auto">
+    <div className="max-w-3xl mx-auto space-y-8">
       <div className="bg-white p-8 rounded-lg shadow-md">
         {/* Header and progress section */}
         <div className="mb-8">
@@ -210,7 +211,7 @@ const Register: React.FC = () => {
 
         <div className="flex flex-col md:flex-row gap-8">
           {/* Left column: Plan benefits */}
-          <div className="md:w-2/5">
+          <div className="md:w-2/5 order-2 md:order-1">
             <div className="bg-purple-50 p-6 rounded-lg mb-8 sticky top-24">
               <h3 className="text-xl font-semibold mb-4">Al crear tu cuenta desbloqueas:</h3>
               <ul className="space-y-3">
@@ -243,7 +244,7 @@ const Register: React.FC = () => {
           </div>
 
           {/* Right column: Form */}
-          <div className="md:w-3/5">
+          <div className="md:w-3/5 order-1 md:order-2">
             {isLogin ? (
               <form onSubmit={handleAuth} className="space-y-6">
                 <div className="space-y-4">
@@ -570,6 +571,8 @@ const Register: React.FC = () => {
           </div>
         </div>
       </div>
+
+      <RegisterLanding />
     </div>
   );
 };
