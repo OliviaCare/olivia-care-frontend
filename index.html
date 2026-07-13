@@ -8,6 +8,31 @@
     'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
     })(window,document,'script','dataLayer','GTM-KLLMHVV2');</script>
     <!-- End Google Tag Manager -->
+
+    <!-- Calendly -> dataLayer (para detectar eventos de Calendly en GTM) -->
+    <script>
+      window.dataLayer = window.dataLayer || [];
+
+      function isCalendlyEvent(e) {
+        return (
+          e.origin === "https://calendly.com" &&
+          e.data &&
+          typeof e.data.event === "string" &&
+          e.data.event.indexOf("calendly.") === 0
+        );
+      }
+
+      window.addEventListener("message", function (e) {
+        if (!isCalendlyEvent(e)) return;
+
+        window.dataLayer.push({
+          event: "calendly_event",
+          calendly_event_name: e.data.event,
+          calendly_payload: e.data.payload || {}
+        });
+      });
+    </script>
+    <!-- End Calendly -> dataLayer -->
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/maia-icon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
