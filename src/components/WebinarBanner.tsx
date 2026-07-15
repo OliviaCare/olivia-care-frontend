@@ -19,12 +19,12 @@ const WebinarBanner: React.FC = () => {
     if (!nombre.trim() || !email.trim()) return;
     setStatus('sending');
     try {
-      await fetch('/', {
+      const res = await fetch('/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: encode({ 'form-name': FORM_NAME, nombre, email }),
       });
-      setStatus('ok');
+      setStatus(res.ok ? 'ok' : 'error');
     } catch (err) {
       console.error('Error enviando el formulario del webinar:', err);
       setStatus('error');
@@ -80,7 +80,6 @@ const WebinarBanner: React.FC = () => {
               data-netlify="true"
               netlify-honeypot="bot-field"
               onSubmit={handleSubmit}
-              className="flex flex-col sm:flex-row gap-3"
             >
               <input type="hidden" name="form-name" value={FORM_NAME} />
               <p className="hidden">
@@ -88,30 +87,32 @@ const WebinarBanner: React.FC = () => {
                   No rellenar: <input name="bot-field" />
                 </label>
               </p>
-              <input
-                type="text"
-                name="nombre"
-                value={nombre}
-                onChange={(e) => setNombre(e.target.value)}
-                placeholder="Tu nombre"
-                required
-                className="flex-1 p-3 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-400"
-              />
-              <input
-                type="email"
-                name="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Tu email"
-                required
-                className="flex-1 p-3 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-400"
-              />
+              <div className="flex flex-col sm:flex-row gap-3 mb-3">
+                <input
+                  type="text"
+                  name="nombre"
+                  value={nombre}
+                  onChange={(e) => setNombre(e.target.value)}
+                  placeholder="Tu nombre"
+                  required
+                  className="flex-1 min-w-0 p-3 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-400"
+                />
+                <input
+                  type="email"
+                  name="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="Tu email"
+                  required
+                  className="flex-1 min-w-0 p-3 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-400"
+                />
+              </div>
               <button
                 type="submit"
                 disabled={status === 'sending'}
-                className="bg-white text-gray-900 font-semibold px-6 py-3 rounded-lg hover:bg-gray-100 transition-colors whitespace-nowrap disabled:opacity-70"
+                className="w-full bg-white text-gray-900 font-semibold px-6 py-3 rounded-lg hover:bg-gray-100 transition-colors disabled:opacity-70"
               >
-                {status === 'sending' ? 'Enviando…' : 'Apuntarme'}
+                {status === 'sending' ? 'Enviando…' : 'Apuntarme al webinar'}
               </button>
             </form>
           )}
