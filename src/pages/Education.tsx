@@ -4,12 +4,9 @@ import { Book, Video, Award, FileText, Users, Lightbulb, PlayCircle, UserCheck, 
 
 const categories = [
   { id: 'all', name: 'Todos', icon: <Book size={20} /> },
-  { id: 'basics', name: 'Fundamentos', icon: <Lightbulb size={20} /> },
   { id: 'symptoms', name: 'Síntomas', icon: <Heart size={20} /> },
   { id: 'treatments', name: 'Tratamientos', icon: <Shield size={20} /> },
-  { id: 'lifestyle', name: 'Estilo de Vida', icon: <Leaf size={20} /> },
-  { id: 'mental', name: 'Bienestar Mental', icon: <Brain size={20} /> },
-  { id: 'exercise', name: 'Ejercicios', icon: <Award size={20} /> }
+  { id: 'lifestyle', name: 'Estilo de Vida', icon: <Leaf size={20} /> }
 ];
 
 const educationalContent = [
@@ -77,7 +74,7 @@ const educationalContent = [
     id: 1,
     type: 'article',
     link: '/education/guia-sobre-la-menopausia',
-    category: 'basics',
+    category: 'treatments',
     title: 'Guía Completa sobre la Menopausia',
     author: 'Dra. María Rodríguez',
     readTime: '15 minutos',
@@ -117,7 +114,7 @@ const educationalContent = [
     id: 3,
     type: 'exercise',
     link: '#',
-    category: 'exercise',
+    category: 'lifestyle',
     title: 'Programa de Ejercicios Adaptados',
     instructor: 'Sonia Ruiz',
     duration: 'Programa de 8 semanas',
@@ -175,7 +172,7 @@ const educationalContent = [
     id: 5,
     type: 'workshop',
     link: 'https://maiacare.es/contacts/',
-    category: 'mental',
+    category: 'lifestyle',
     title: 'Taller: Mindfulness y Gestión Emocional',
     instructor: 'Aoife McGale',
     duration: '4 sesiones de 90 minutos',
