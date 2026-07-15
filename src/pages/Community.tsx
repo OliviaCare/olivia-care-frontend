@@ -11,6 +11,7 @@ import {
   type CommunityPost,
   type PostComment
 } from '../services/communityService';
+import WebinarBanner from '../components/WebinarBanner';
 
 const categories = [
   { id: 'all', name: 'Todo', icon: <MessageSquare size={18} /> },
@@ -188,6 +189,7 @@ const Community: React.FC = () => {
 
   return (
     <div className="max-w-4xl mx-auto">
+      <WebinarBanner />
       <div className="bg-white p-6 rounded-lg shadow-md mb-6">
         <h1 className="text-2xl font-bold text-purple-800 mb-4">Comunidad Maia</h1>
         <p className="text-gray-600 mb-6">

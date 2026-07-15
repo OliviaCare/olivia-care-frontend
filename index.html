@@ -52,6 +52,13 @@
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KLLMHVV2"
     height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
+
+    <!-- Formulario oculto para que Netlify detecte el formulario del webinar -->
+    <form name="webinar-sexualidad" data-netlify="true" netlify-honeypot="bot-field" hidden>
+      <input type="text" name="nombre" />
+      <input type="email" name="email" />
+    </form>
+
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
