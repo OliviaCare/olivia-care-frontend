@@ -6,6 +6,7 @@ import Header from './components/Header';
 import Footer from './components/Footer';
 import CalendlyGate from './components/CalendlyGate';
 import CalendlyCleanup from './components/CalendlyCleanup';
+import CookiebotSuppressor from './components/CookiebotSuppressor';
 import ErrorBoundary from './components/ErrorBoundary';
 import Notification from './components/Notification';
 import Home from './pages/Home';
@@ -39,6 +40,7 @@ const App: React.FC = () => {
         <div className="flex flex-col min-h-screen bg-pink-50">
           <Header />
           <CalendlyCleanup />
+          <CookiebotSuppressor />
           <main className="flex-grow container mx-auto px-4 py-8 pb-24 md:pb-8">
             <ErrorBoundary>
             <Routes>
