@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Calendar, ThermometerSun, Brain, Heart, Moon, Battery, Droplets, Activity, AlertCircle, MessageSquare, CheckCircle, X, Info } from 'lucide-react';
+import { Calendar, ThermometerSun, Brain, Heart, Moon, Battery, Droplets, Activity, AlertCircle, MessageSquare, CheckCircle, X, Info, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { logSymptoms } from '../services/symptomService';
 
@@ -208,29 +208,41 @@ const SymptomTracker: React.FC = () => {
 
   return (
     <div className="max-w-4xl mx-auto">
-      <div className="bg-white p-8 rounded-lg shadow-md">
-        <div className="flex items-center justify-between mb-6">
-          <h1 className="text-2xl font-bold text-purple-800">Registro Diario de Síntomas</h1>
-          <div className="flex items-center space-x-4">
-            <button 
+      <div className="bg-white p-4 sm:p-8 rounded-lg shadow-md">
+        <div className="mb-6">
+          <h1 className="text-2xl font-bold text-purple-800 mb-4">Registro Diario de Síntomas</h1>
+          <div className="flex items-center justify-between gap-2 bg-purple-50 rounded-xl p-2">
+            <button
               onClick={() => handleDateChange(new Date(selectedDate.setDate(selectedDate.getDate() - 1)))}
-              className="text-purple-600 hover:text-purple-800 transition-colors p-2 rounded-lg hover:bg-purple-50"
+              aria-label="Día anterior"
+              className="p-2 rounded-lg text-purple-600 hover:text-purple-800 hover:bg-purple-100 transition-colors flex-shrink-0"
             >
-              &lt; Anterior
+              <ChevronLeft size={22} />
             </button>
-            <span className="font-semibold px-4 py-2 bg-purple-50 rounded-lg">
-              {selectedDate.toLocaleDateString('es-ES', { 
-                weekday: 'long',
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric'
-              })}
+            <span className="font-semibold text-sm md:text-base text-center capitalize">
+              <span className="md:hidden">
+                {selectedDate.toLocaleDateString('es-ES', {
+                  weekday: 'short',
+                  day: 'numeric',
+                  month: 'short',
+                  year: 'numeric'
+                })}
+              </span>
+              <span className="hidden md:inline">
+                {selectedDate.toLocaleDateString('es-ES', {
+                  weekday: 'long',
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric'
+                })}
+              </span>
             </span>
-            <button 
+            <button
               onClick={() => handleDateChange(new Date(selectedDate.setDate(selectedDate.getDate() + 1)))}
-              className="text-purple-600 hover:text-purple-800 transition-colors p-2 rounded-lg hover:bg-purple-50"
+              aria-label="Día siguiente"
+              className="p-2 rounded-lg text-purple-600 hover:text-purple-800 hover:bg-purple-100 transition-colors flex-shrink-0"
             >
-              Siguiente &gt;
+              <ChevronRight size={22} />
             </button>
           </div>
         </div>
@@ -252,16 +264,16 @@ const SymptomTracker: React.FC = () => {
         <div className="space-y-8">
           {/* Síntomas */}
           <section>
-            <div className="flex items-center justify-between mb-4">
+            <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between mb-4">
               <h2 className="text-lg font-semibold text-gray-800">Síntomas</h2>
               <div className="flex items-center text-sm text-gray-500">
-                <Info size={16} className="mr-1" />
+                <Info size={16} className="mr-1 flex-shrink-0" />
                 Desliza para indicar la intensidad
               </div>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {symptoms.map(symptom => (
-                <div key={symptom.id} className="bg-white border border-gray-200 p-6 rounded-xl hover:shadow-md transition-shadow">
+                <div key={symptom.id} className="bg-white border border-gray-200 p-4 sm:p-6 rounded-xl hover:shadow-md transition-shadow">
                   <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center">
                       <div className="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center mr-3">
@@ -284,12 +296,15 @@ const SymptomTracker: React.FC = () => {
                       background: `linear-gradient(to right, ${symptom.color} ${(symptomIntensities[symptom.id] || 0) * 33.33}%, #e5e7eb ${(symptomIntensities[symptom.id] || 0) * 33.33}%)`
                     }}
                   />
-                  <div className="flex justify-between text-xs text-gray-500 mt-2">
+                  <div className="hidden sm:flex justify-between text-xs text-gray-500 mt-2">
                     {symptom.scale.map((label, index) => (
                       <span key={index} className="text-center" style={{ width: '25%' }}>
                         {label}
                       </span>
                     ))}
+                  </div>
+                  <div className="sm:hidden mt-2 text-sm text-gray-600 text-center font-medium">
+                    {symptom.scale[symptomIntensities[symptom.id] || 0]}
                   </div>
                 </div>
               ))}
